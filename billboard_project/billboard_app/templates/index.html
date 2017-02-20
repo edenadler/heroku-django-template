@@ -1,0 +1,121 @@
+<!--add static files and js with curly brackets-->
+<!--&lt;!&ndash;add static files and js with curly brackets&ndash;&gt;-->
+<!--{% load static %}-->
+
+<!DOCTYPE html>
+<meta charset="UTF-8">
+<!--<html>-->
+<!--<head>-->
+    <!--&lt;!&ndash;add script tags for the ajax csrf call&ndash;&gt;-->
+    <!--<title>Billboard</title>-->
+    <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">-->
+	<!--<link rel="stylesheet" href="{% static 'billboard_app/billboard.css' %}">-->
+    <!--<link href="https://fonts.googleapis.com/css?family=Anton|Pinyon+Script|Poiret+One" rel="stylesheet">-->
+    <!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">-->
+	<!--<script src="https://code.jquery.com/jquery-2.1.4.min.js" type="text/javascript"></script>-->
+	<!--<script src="{% static '/billboard.js' %}" type="text/javascript"></script>-->
+
+<html>
+<head>
+    <!--add script tags for the ajax csrf call-->
+    <title>Billboard</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+	<link rel="stylesheet" href="../static/billboard.css">
+    <link href="https://fonts.googleapis.com/css?family=Anton|Pinyon+Script|Poiret+One" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+	<script src="https://code.jquery.com/jquery-2.1.4.min.js" type="text/javascript"></script>
+	<script src="../static/billboard.js" type="text/javascript"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12 col-sm-10 col-sm-offset-1 col-md-10 col-md-offset-1">
+                <div class ="header text-center">
+                    <h1>BILLBOARD</h1>
+                </div>
+                <div class="posts center-block">
+                    {% if not database_state %}
+                    <div class="no-msg-container center-block text-center padding">
+                        <span>No messages...</span></br>
+                        <span>Click the '+' button to add a new message</span>
+                    </div>
+                    {% else %}
+                        {% for post in database_state %}
+                        <form class="padding">
+                            <fieldset class="message-fieldset container center-block">
+                                <legend class="legend">{{post.pub_date|date:"m/d/Y"}}</legend>
+                                    <div class="row">
+                                        <div class="col-xs-3 col-sm-3 col-md-3 post-title">
+                                            <h3>{{post.title}}</h3>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-xs-10 col-sm-10 col-md-10 post-message">
+                                            <p>{{post.message}}</p>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-xs-2 col-xs-offset-8 col-sm-2 col-sm-offset-8 col-md-2 col-md-offset-10 pull-right post-signature">
+                                            <p>{{post.author}}</p>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-xs-2 col-xs-offset-8 col-sm-2 col-sm-offset-8 col-md-2 col-md-offset-10 pull-right">
+                                            <span class="comment pull-right">
+                                                <i class="fa fa-comment type='button' data-toggle='collapse' data-target='#collapseExample' aria-expanded='false' aria-controls='collapseExample' aria-hidden='true'"></i> Comment
+                                            </span>
+                                        </div>
+                                    </div>
+                            </fieldset>
+                        </form>
+                        <div class="collapse comment-block container pull-right" id="collapseExample">
+                            <div class="row">
+                                <div class="col-xs-12 col-sm-12 col-md-12 pull-right comment-message">
+                                    <textarea class="text-area well well-sm" placeholder="Your comment here" required></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                    {% endif %}
+                        <form class="padding" id="blank-form">
+                            {% csrf_token %}
+                            <fieldset class="fieldset container center-block">
+                                <legend class="legend">{% now 'm/d/Y'%}</legend>
+                                    <div class="row">
+                                        <div class="col-xs-3 col-sm-3 col-md-3 post-title">
+                                            <input type="text" class="input-item" id="titleInput" placeholder="Title" required>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-xs-12 col-sm-12 col-md-12 post-message">
+                                            <textarea class="text-area" placeholder="Your message here" required></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="pull-right post-signature">
+                                            <input type="text" class="input-item" id="authorInput" placeholder="Author" required>
+                                        </div>
+                                    </div>
+                            </fieldset>
+                        </form>
+                    </div>
+                    <div class="add-post-container center-block text-center padding">
+                        <button type="button" id = "add-btn" class="btn btn-default center-block add-btn">
+                            <i class="fa fa-plus" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                    <div class="form-container center-block text-center padding">
+                        <button type='button' id = 'close-btn' class='btn btn-default center-block close-btn'>
+                            <i class='fa fa-times' aria-hidden='true'></i>
+                        </button>
+                        <button type='button' id = 'check-btn' class='btn btn-default center-block check-btn'>
+                            <i class='fa fa-check' aria-hidden='true'></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
