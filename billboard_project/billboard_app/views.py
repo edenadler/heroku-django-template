@@ -1,13 +1,14 @@
 from django.shortcuts import render
 from django.http import JsonResponse, HttpResponse, HttpResponseRedirect
-from .models import Post
+from .models import Post, Comment
 from django.utils import timezone
 from django.template.loader import render_to_string
 
 def check_db(request):
         database_state = Post.objects.all()
         print("database",database_state)
-        return render(request, 'index.html', {'database_state': database_state})
+        comments = Comment.objects.all()
+        return render(request, 'index.html', {'database_state': database_state, "comments": comments})
 
 
 def store(request):
@@ -24,8 +25,19 @@ def store(request):
             x=Post(title=post_title,author = post_author,message = post_text,pub_date=created_date)
             x.save()
 
-            # database_state = Post.objects.all()
-            # print("database_state",database_state)
             data = {"title":post_title,"author":post_author,"message":post_text,"pub_date":created_date}
             html = render_to_string('posts.html', {'data': data})
+            return HttpResponse(html)
+
+def comment(request):
+    if request.method == 'POST':
+        if request.is_ajax():
+            comment_message = request.POST.get("comment")
+            comment_id = request.POST.get("id")
+
+            x = Comment(message=comment_message,post_id=comment_id)
+            x.save()
+
+            data = {"message": comment_message, "post_id": comment_id}
+            html = render_to_string('comments.html', {'data': data})
             return HttpResponse(html)

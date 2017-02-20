@@ -1,5 +1,6 @@
 var Billboard = {};
 
+Billboard.elemID = 0;
 
 Billboard.start = function(){
     $(document).ready(function () {
@@ -10,13 +11,54 @@ Billboard.start = function(){
 };
 
 Billboard.activateListeners = function(){
-    $("#add-btn").bind("click", Billboard.showForm)
-    $(".comment").bind("click",Billboard.showCommentForm)
+    $("#add-btn").bind("click", Billboard.showForm);
+    $(".comment").bind("click",Billboard.showCommentForm);
 };
 
 Billboard.showCommentForm = function(){
-
+    Billboard.elemId = $(this).attr("id")
+    $(".comment_"+Billboard.elemId).collapse('toggle');
+    $(".fa-paper-plane").click(function(){
+        $(".comment_"+Billboard.elemId).collapse('hide');
+        Billboard.submitComment();
+    })
 };
+
+Billboard.submitComment = function(){
+      function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = jQuery.trim(cookies[i]);
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    function csrfSafeMethod(method) {
+        // these HTTP methods do not require CSRF protection
+        return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+    }
+
+    var csrftoken = getCookie('csrftoken');
+
+
+    $.post("/comment",
+        {"csrfmiddlewaretoken" : csrftoken,
+            "comment": $("#comment-box").val(),
+            "id": Billboard.elemId,},
+            function(data, xhr, settings) {
+                console.log(data);
+                $(".previous-comments").append(data)
+            })
+};
+
 
 Billboard.showForm = function(){
     $(".no-msg-container").hide();

@@ -10,5 +10,6 @@ class Post(models.Model):
     pub_date = models.DateTimeField(default=timezone.now)
 
 
-class test(models.Model):
-    test_name= models.CharField(max_length=100, null=True)
+class Comment(models.Model):
+    message= models.CharField(max_length=200, null=True)
+    post_id = models.ForeignKey(Post)

@@ -167,3 +167,23 @@ body{
     height: auto;
     margin-top: -28px;
 }
+
+.well{
+    width: 100%;
+    margin: 5px;
+    display: inline-block;
+    position: relative;
+}
+
+.fa-paper-plane{
+    display: inline-block;
+    color: white;
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.send-btn{
+    display: block;
+    cursor: pointer;
+}
