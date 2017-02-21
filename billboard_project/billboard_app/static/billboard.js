@@ -1,6 +1,7 @@
 var Billboard = {};
 
 Billboard.elemID = 0;
+Billboard.comment = "";
 
 Billboard.start = function(){
     $(document).ready(function () {
@@ -20,11 +21,13 @@ Billboard.showCommentForm = function(){
     $(".comment_"+Billboard.elemId).collapse('toggle');
     $(".fa-paper-plane").click(function(){
         $(".comment_"+Billboard.elemId).collapse('hide');
+        Billboard.comment = $("#comment-box_"+Billboard.elemId).val();
         Billboard.submitComment();
     })
 };
 
 Billboard.submitComment = function(){
+    console.log("Here")
       function getCookie(name) {
         var cookieValue = null;
         if (document.cookie && document.cookie !== '') {
@@ -51,11 +54,11 @@ Billboard.submitComment = function(){
 
     $.post("/comment",
         {"csrfmiddlewaretoken" : csrftoken,
-            "comment": $("#comment-box").val(),
-            "id": Billboard.elemId,},
+            "comment": Billboard.comment,
+            "id": Billboard.elemId},
             function(data, xhr, settings) {
                 console.log(data);
-                $(".previous-comments").append(data)
+                $(".previous-comments_"+Billboard.elemId).append(data)
             })
 };
 

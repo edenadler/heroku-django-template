@@ -6,9 +6,9 @@ from django.template.loader import render_to_string
 
 def check_db(request):
         database_state = Post.objects.all()
+
         print("database",database_state)
-        comments = Comment.objects.all()
-        return render(request, 'index.html', {'database_state': database_state, "comments": comments})
+        return render(request, 'index.html', {'database_state': database_state})
 
 
 def store(request):
@@ -34,10 +34,13 @@ def comment(request):
         if request.is_ajax():
             comment_message = request.POST.get("comment")
             comment_id = request.POST.get("id")
-
-            x = Comment(message=comment_message,post_id=comment_id)
+            print(comment_message)
+            obj = Post.objects.get(pk=comment_id)
+            print("id_num",obj.pk)
+            x = Comment(message=comment_message,post_id_id=obj.pk)
             x.save()
 
-            data = {"message": comment_message, "post_id": comment_id}
+            data = {"message": comment_message, "post_id": obj.pk}
+            print("data",data)
             html = render_to_string('comments.html', {'data': data})
             return HttpResponse(html)

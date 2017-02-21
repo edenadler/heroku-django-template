@@ -69,15 +69,13 @@
                                     </div>
                             </fieldset>
                         </form>
-                        <div class = "container previous-comments center-block">
-                         {% for comment in comments %}
-                             {% if post.pk == comment.id %}
+                        <div class = "previous-comments_{{ post.pk }} center-block">
+                         {% for comment in post.comment_set.all %}
                              <div class="row">
                                 <div class="col-xs-12 col-sm-12 col-md-12">
-                                    <div class="well well-sm">{{ comment.message }}</div>
+                                    <div class="well well-sm comment-well">{{ comment.message }}</div>
                                 </div>
                              </div>
-                             {% endif %}
                         {% endfor %}
                         </div>
                         <div class="collapse comment-block container pull-right comment_{{ post.pk }}">
@@ -85,7 +83,7 @@
                                 <div class="col-xs-12 col-sm-12 col-md-12 pull-right comment-message comment_{{ post.pk }} collapse">
                                     <div class="row">
                                         <div class="col-xs-11 col-sm-11 col-md-11">
-                                            <input id="comment-box" class="well comment_{{ post.pk }} collapse" placeholder="Your comment here">
+                                            <input id="comment-box_{{ post.pk }}" class="well comment_{{ post.pk }} collapse" placeholder="Your comment here">
                                         </div>
                                         <div class="col-xs-1 col-sm-1 col-md-1 send-btn center-block">
                                             <i class="fa fa-paper-plane comment_{{ post.pk }} collapse" aria-hidden="true"></i>
